@@ -1,0 +1,2 @@
+Hello from test kernel!
+thread TODO panicked at 'Test panic'

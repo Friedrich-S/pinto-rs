@@ -1,1 +1,2 @@
-cargo build --target x86_64-unknown-none
+# Build kernel and os crate to make bootable kernel image
+cargo run
