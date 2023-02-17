@@ -5,7 +5,6 @@ use crate::mem::PAGE_SIZE;
 use crate::println;
 use crate::utils::BitSliceScan;
 use bitvec::slice::BitSlice;
-use core::ops::Deref;
 use core::ops::DerefMut;
 use core::ptr::NonNull;
 use enumflags2::bitflags;
@@ -48,7 +47,7 @@ impl PageAllocator {
         PAGE_ALLOC.user_pool.init(base, user_pages, "user pool");
     }
 
-    pub fn get_pages(flags: BitFlags<PageAllocFlags>, num: usize) -> Option<*mut ()> {
+    pub fn get_pages(flags: BitFlags<PageAllocFlags>, num: usize) -> Option<NonNull<()>> {
         if num == 0 {
             return None;
         }
@@ -74,10 +73,10 @@ impl PageAllocator {
             }
         }
 
-        Some(pages as *mut ())
+        Some(NonNull::new(pages as *mut ())?)
     }
 
-    pub fn free_pages(pages: NonNull<*mut ()>, num: usize) {
+    pub fn free_pages(pages: NonNull<()>, num: usize) {
         let page_addr = VirtualAddress::new(pages.as_ptr() as u64);
         assert_eq!(page_addr.page_offset(), 0);
 

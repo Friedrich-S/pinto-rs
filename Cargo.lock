@@ -310,6 +310,7 @@ dependencies = [
  "bootloader_api",
  "enumflags2",
  "spinning_top",
+ "tap",
  "uart_16550",
 ]
 
