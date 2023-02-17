@@ -1,2 +1,78 @@
 Hello from test kernel!
+BootInfo {
+    api_version: ApiVersion {
+        version_major: 0,
+        version_minor: 11,
+        version_patch: 0,
+        pre_release: false,
+    },
+    memory_regions: MemoryRegions {
+        ptr: 0x00000200000000a0,
+        len: 7,
+    },
+    framebuffer: Some(
+        FrameBuffer {
+            buffer_start: 1649267441664,
+            info: FrameBufferInfo {
+                byte_len: 2764800,
+                width: 1280,
+                height: 720,
+                pixel_format: Bgr,
+                bytes_per_pixel: 3,
+                stride: 1280,
+            },
+        },
+    ),
+    physical_memory_offset: None,
+    recursive_index: None,
+    rsdp_addr: Some(
+        1006048,
+    ),
+    tls_template: None,
+}
+[
+    MemoryRegion {
+        start: 0,
+        end: 654336,
+        kind: Bootloader,
+    },
+    MemoryRegion {
+        start: 654336,
+        end: 655360,
+        kind: UnknownBios(
+            2,
+        ),
+    },
+    MemoryRegion {
+        start: 983040,
+        end: 1048576,
+        kind: UnknownBios(
+            2,
+        ),
+    },
+    MemoryRegion {
+        start: 1048576,
+        end: 17920000,
+        kind: Bootloader,
+    },
+    MemoryRegion {
+        start: 17920000,
+        end: 134086656,
+        kind: Usable,
+    },
+    MemoryRegion {
+        start: 134086656,
+        end: 134217728,
+        kind: UnknownBios(
+            2,
+        ),
+    },
+    MemoryRegion {
+        start: 4294705152,
+        end: 4294967296,
+        kind: UnknownBios(
+            2,
+        ),
+    },
+]
 thread TODO panicked at 'Test panic'

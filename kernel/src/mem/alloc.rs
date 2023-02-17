@@ -4,8 +4,16 @@ use core::alloc::Layout;
 #[global_allocator]
 static ALLOCATOR: SimpleAlloc = SimpleAlloc;
 
+pub fn init_heap() {
+    ALLOCATOR.init();
+}
+
 /// A simple malloc implementation similar to the one used in the original Pintos.
 pub struct SimpleAlloc;
+
+impl SimpleAlloc {
+    fn init(&self) {}
+}
 
 unsafe impl GlobalAlloc for SimpleAlloc {
     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
