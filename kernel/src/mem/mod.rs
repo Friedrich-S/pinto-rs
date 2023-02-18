@@ -95,7 +95,6 @@ impl PhysicalAddress {
 
     pub fn to_kernel_virtual(self) -> VirtualAddress {
         let info = MemoryInfo::get();
-        assert!(self.val < info.base_address);
 
         VirtualAddress::new(self.val + info.base_virtual_address + PHYS_BASE)
     }

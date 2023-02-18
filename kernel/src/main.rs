@@ -7,6 +7,7 @@
 
 extern crate alloc;
 
+use crate::mem::MemoryInfo;
 use crate::mem::PageAllocator;
 use bootloader_api::config::Mapping;
 use bootloader_api::BootloaderConfig;
@@ -24,10 +25,11 @@ fn kernel_main(boot_info: &'static mut bootloader_api::BootInfo) -> ! {
     println!("{:#?}", boot_info.memory_regions.deref());
 
     // Initialize memory system
+    MemoryInfo::init(boot_info);
     PageAllocator::init(u64::MAX);
     crate::mem::init_heap();
 
-    loop {}
+    shutdown_power_off();
 }
 
 pub static BOOTLOADER_CONFIG: BootloaderConfig = {
@@ -42,15 +44,43 @@ bootloader_api::entry_point!(kernel_main, config = &BOOTLOADER_CONFIG);
 fn panic(info: &PanicInfo) -> ! {
     // ToDo: include thread name
     if let Some(s) = info.message() {
-        println!("thread TODO panicked at '{s:?}'");
+        if let Some(loc) = info.location() {
+            println!("thread TODO panicked at '{s:?}', {}:{}", loc.file(), loc.line());
+        } else {
+            println!("thread TODO panicked at '{s:?}'");
+        }
     } else {
         println!("thread TODO panicked");
     }
 
-    loop {}
+    shutdown_power_off();
 }
 
 #[alloc_error_handler]
 fn alloc_error_handler(layout: alloc::alloc::Layout) -> ! {
     panic!("allocation error: {:?}", layout)
+}
+
+pub fn shutdown_power_off() -> ! {
+    use x86_64::instructions::{nop, port::Port};
+
+    unsafe {
+        let mut port = Port::new(0xB004);
+        port.write(0x2000u16);
+
+        // Special exit sequence for QEMU and Bochs
+        let s = b"Shutdown";
+        let mut port = Port::new(0x8900);
+        for i in 0..s.len() {
+            port.write(s[i]);
+        }
+
+        // Exit code for newer QEMU versions
+        let mut port = Port::new(0x501);
+        port.write(0x31u32);
+    }
+
+    loop {
+        nop();
+    }
 }
