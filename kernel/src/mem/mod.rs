@@ -58,6 +58,11 @@ impl VirtualAddress {
     pub fn page_num(&self) -> u64 {
         self.val >> PAGE_OFFSET_BITS
     }
+
+    /// Round down to the nearest page boundary.
+    pub fn page_round_down(&self) -> Self {
+        Self::new(self.val & !PAGE_OFFSET_MASK)
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]

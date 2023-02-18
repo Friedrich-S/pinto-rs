@@ -97,7 +97,7 @@ impl PageAllocator {
         // ToDo: write safety statement
         #[cfg(debug_assertions)]
         unsafe {
-            core::ptr::write_bytes(pages.as_ptr().cast::<u8>(), 0xcc, (PAGE_SIZE as usize) * num);
+            core::ptr::write_bytes(pages.as_ptr().cast::<u8>(), 0xCC, (PAGE_SIZE as usize) * num);
         }
 
         let mut used_map = pool.used_map.lock();
