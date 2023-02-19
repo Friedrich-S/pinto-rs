@@ -4,13 +4,17 @@
 #![feature(alloc_error_handler)]
 #![feature(panic_info_message)]
 #![feature(int_roundings)]
+#![feature(abi_x86_interrupt)]
+#![feature(asm_const)]
 
 extern crate alloc;
 
 use crate::mem::MemoryInfo;
 use crate::mem::PageAllocator;
+use crate::threads::Interrupts;
 use bootloader_api::config::Mapping;
 use bootloader_api::BootloaderConfig;
+use core::arch::asm;
 use core::ops::Deref;
 use core::panic::PanicInfo;
 
@@ -28,6 +32,41 @@ fn kernel_main(boot_info: &'static mut bootloader_api::BootInfo) -> ! {
     MemoryInfo::init(boot_info);
     PageAllocator::init(u64::MAX);
     crate::mem::init_heap();
+    // ToDo: paging_init();
+
+    // Segmentation
+    // ToDo: tss_init();
+    // ToDo: gdt_init();
+
+    // Initialize interrupt handlers
+    Interrupts::init();
+    // ToDo: timer_init();
+    // ToDo: kbd_init();
+    // ToDo: input_init();
+    // ToDo: exception_init();
+    // ToDo: syscall_init();
+
+    // Start thread scheduler and enable interrupts
+    // ToDo: thread_start();
+    // ToDo: serial_init_queue();
+    // ToDo: timer_calibrate();
+
+    // Give main thread a minimal PCB so it can launch the first process
+    // ToDo: userprog_init();
+
+    // Initialize file system
+    // ToDo: ide_init();
+    // ToDo: locate_block_devices();
+    // ToDo: filesys_init(format_filesys);
+
+    println!("Boot complete.");
+
+    // Run actions specified on kernel command line.
+    // ToDo: run_actions(argv);
+
+    unsafe {
+        x86_64::software_interrupt!(0x30);
+    }
 
     shutdown_power_off();
 }

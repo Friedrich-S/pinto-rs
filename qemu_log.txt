@@ -54,11 +54,11 @@ BootInfo {
     },
     MemoryRegion {
         start: 1048576,
-        end: 18382848,
+        end: 18608128,
         kind: Bootloader,
     },
     MemoryRegion {
-        start: 18382848,
+        start: 18608128,
         end: 134086656,
         kind: Usable,
     },
@@ -77,6 +77,17 @@ BootInfo {
         ),
     },
 ]
-MemoryInfo { base_address: 18382848, size: 115703808, base_virtual_address: 2199023255552 }
-13995 pages available in kernel pool
-13995 pages available in user pool
+13968 pages available in kernel pool
+13967 pages available in user pool
+Boot complete.
+thread TODO panicked at 'Received interrupt: index:48, error_code:None, frame=InterruptStackFrame {
+    instruction_pointer: VirtAddr(
+        0x800000a36d,
+    ),
+    code_segment: 8,
+    cpu_flags: 0x2,
+    stack_pointer: VirtAddr(
+        0x10000012ca0,
+    ),
+    stack_segment: 16,
+}', kernel/src/threads/interrupt.rs:44
