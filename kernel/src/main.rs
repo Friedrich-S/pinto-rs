@@ -9,6 +9,7 @@
 
 extern crate alloc;
 
+use crate::devices::Timer;
 use crate::mem::MemoryInfo;
 use crate::mem::PageAllocator;
 use crate::threads::Interrupts;
@@ -18,6 +19,7 @@ use core::arch::asm;
 use core::ops::Deref;
 use core::panic::PanicInfo;
 
+mod devices;
 mod io;
 mod mem;
 mod threads;
@@ -40,7 +42,7 @@ fn kernel_main(boot_info: &'static mut bootloader_api::BootInfo) -> ! {
 
     // Initialize interrupt handlers
     Interrupts::init();
-    // ToDo: timer_init();
+    Timer::init();
     // ToDo: kbd_init();
     // ToDo: input_init();
     // ToDo: exception_init();
@@ -65,6 +67,7 @@ fn kernel_main(boot_info: &'static mut bootloader_api::BootInfo) -> ! {
     // ToDo: run_actions(argv);
 
     unsafe {
+        x86_64::software_interrupt!(0x30);
         x86_64::software_interrupt!(0x30);
     }
 

@@ -80,7 +80,7 @@ BootInfo {
 13968 pages available in kernel pool
 13967 pages available in user pool
 Boot complete.
-thread TODO panicked at 'Received interrupt: index:48, error_code:None, frame=InterruptStackFrame {
+Received interrupt: index:48, error_code:None, frame=InterruptStackFrame {
     instruction_pointer: VirtAddr(
         0x800000a36d,
     ),
@@ -90,4 +90,15 @@ thread TODO panicked at 'Received interrupt: index:48, error_code:None, frame=In
         0x10000012ca0,
     ),
     stack_segment: 16,
-}', kernel/src/threads/interrupt.rs:44
+}
+Received interrupt: index:48, error_code:None, frame=InterruptStackFrame {
+    instruction_pointer: VirtAddr(
+        0x800000a36f,
+    ),
+    code_segment: 8,
+    cpu_flags: 0x2,
+    stack_pointer: VirtAddr(
+        0x10000012ca0,
+    ),
+    stack_segment: 16,
+}
