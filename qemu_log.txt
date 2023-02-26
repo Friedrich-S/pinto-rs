@@ -1,104 +1,31 @@
-Hello from test kernel!
-BootInfo {
-    api_version: ApiVersion {
-        version_major: 0,
-        version_minor: 11,
-        version_patch: 0,
-        pre_release: false,
-    },
-    memory_regions: MemoryRegions {
-        ptr: 0x00000280000000a0,
-        len: 7,
-    },
-    framebuffer: Some(
-        FrameBuffer {
-            buffer_start: 1649267441664,
-            info: FrameBufferInfo {
-                byte_len: 2764800,
-                width: 1280,
-                height: 720,
-                pixel_format: Bgr,
-                bytes_per_pixel: 3,
-                stride: 1280,
-            },
-        },
-    ),
-    physical_memory_offset: Some(
-        2199023255552,
-    ),
-    recursive_index: None,
-    rsdp_addr: Some(
-        1006048,
-    ),
-    tls_template: None,
-}
-[
-    MemoryRegion {
-        start: 0,
-        end: 654336,
-        kind: Bootloader,
-    },
-    MemoryRegion {
-        start: 654336,
-        end: 655360,
-        kind: UnknownBios(
-            2,
-        ),
-    },
-    MemoryRegion {
-        start: 983040,
-        end: 1048576,
-        kind: UnknownBios(
-            2,
-        ),
-    },
-    MemoryRegion {
-        start: 1048576,
-        end: 18608128,
-        kind: Bootloader,
-    },
-    MemoryRegion {
-        start: 18608128,
-        end: 134086656,
-        kind: Usable,
-    },
-    MemoryRegion {
-        start: 134086656,
-        end: 134217728,
-        kind: UnknownBios(
-            2,
-        ),
-    },
-    MemoryRegion {
-        start: 4294705152,
-        end: 4294967296,
-        kind: UnknownBios(
-            2,
-        ),
-    },
-]
-13968 pages available in kernel pool
-13967 pages available in user pool
+Init Thread
+Init MemoryInfo
+Init PageAllocator
+13956 pages available in kernel pool
+13956 pages available in user pool
+Init heap
+Init Interrupts
+Init Timer
 Boot complete.
 Received interrupt: index:48, error_code:None, frame=InterruptStackFrame {
     instruction_pointer: VirtAddr(
-        0x800000a36d,
+        0x80000152cc,
     ),
     code_segment: 8,
-    cpu_flags: 0x2,
+    cpu_flags: 0x6,
     stack_pointer: VirtAddr(
-        0x10000012ca0,
+        0x10000012e20,
     ),
     stack_segment: 16,
 }
 Received interrupt: index:48, error_code:None, frame=InterruptStackFrame {
     instruction_pointer: VirtAddr(
-        0x800000a36f,
+        0x80000152ce,
     ),
     code_segment: 8,
-    cpu_flags: 0x2,
+    cpu_flags: 0x6,
     stack_pointer: VirtAddr(
-        0x10000012ca0,
+        0x10000012e20,
     ),
     stack_segment: 16,
 }

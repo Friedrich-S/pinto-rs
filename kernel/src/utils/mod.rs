@@ -38,3 +38,15 @@ impl<T: BitStore, O: BitOrder> BitSliceScan for BitSlice<T, O> {
         Some(idx)
     }
 }
+
+/// Reads and returns the value of the stack pointer register.
+pub fn read_esp() -> usize {
+    let esp: usize;
+
+    // SAFETY: it is safe to read from a register.
+    unsafe {
+        core::arch::asm!("mov {}, [esp]", out(reg) esp, options(nostack, nomem, preserves_flags));
+    }
+
+    esp
+}

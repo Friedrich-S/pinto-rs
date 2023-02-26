@@ -1,3 +1,7 @@
+//! # General Notes
+//! - it is safe to have heap allocations in the kernel because `SimpleKernelAlloc` is
+//!   set as the global allocator for the entire crate.
+
 #![no_std]
 #![no_main]
 #![feature(format_args_nl)]
@@ -13,26 +17,29 @@ use crate::devices::Timer;
 use crate::mem::MemoryInfo;
 use crate::mem::PageAllocator;
 use crate::threads::Interrupts;
+use crate::threads::Thread;
 use bootloader_api::config::Mapping;
 use bootloader_api::BootloaderConfig;
 use core::arch::asm;
-use core::ops::Deref;
 use core::panic::PanicInfo;
 
 mod devices;
 mod io;
 mod mem;
+mod proc;
 mod threads;
 mod utils;
 
 fn kernel_main(boot_info: &'static mut bootloader_api::BootInfo) -> ! {
-    println!("Hello from test kernel!");
-    println!("{boot_info:#?}");
-    println!("{:#?}", boot_info.memory_regions.deref());
+    println!("Init Thread");
+    Thread::init();
 
     // Initialize memory system
+    println!("Init MemoryInfo");
     MemoryInfo::init(boot_info);
+    println!("Init PageAllocator");
     PageAllocator::init(u64::MAX);
+    println!("Init heap");
     crate::mem::init_heap();
     // ToDo: paging_init();
 
@@ -41,7 +48,9 @@ fn kernel_main(boot_info: &'static mut bootloader_api::BootInfo) -> ! {
     // ToDo: gdt_init();
 
     // Initialize interrupt handlers
+    println!("Init Interrupts");
     Interrupts::init();
+    println!("Init Timer");
     Timer::init();
     // ToDo: kbd_init();
     // ToDo: input_init();

@@ -14,7 +14,7 @@ use tap::TapOptional;
 const NUM_DESCS: usize = (PAGE_SIZE / 32).ilog2() as usize;
 
 #[global_allocator]
-static ALLOCATOR: SimpleAlloc = SimpleAlloc { descs: &ALLOC_DESCS };
+static ALLOCATOR: SimpleKernelAlloc = SimpleKernelAlloc { descs: &ALLOC_DESCS };
 const DEFAULT_DESC: Spinlock<Descriptor> = const_spinlock(Descriptor::new());
 static ALLOC_DESCS: [Spinlock<Descriptor>; NUM_DESCS] = [DEFAULT_DESC; NUM_DESCS];
 
@@ -23,11 +23,14 @@ pub fn init_heap() {
 }
 
 /// A simple malloc implementation similar to the one used in the original Pintos.
-pub struct SimpleAlloc {
+///
+/// This allocator will allocate kernel-only memory and is not intended for use with
+/// user-level memory management.
+pub struct SimpleKernelAlloc {
     descs: &'static [Spinlock<Descriptor>; NUM_DESCS],
 }
 
-impl SimpleAlloc {
+impl SimpleKernelAlloc {
     fn init(&self) {
         let mut block_size = 16;
         for desc in self.descs {
@@ -41,7 +44,7 @@ impl SimpleAlloc {
 }
 
 // ToDo: add safety notes to all unsafe function calls here
-unsafe impl GlobalAlloc for SimpleAlloc {
+unsafe impl GlobalAlloc for SimpleKernelAlloc {
     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
         // The safety requirements state that the caller must ensure that the layout
         // must have a non-zero size, so we do not need to check this.
