@@ -1,13 +1,7 @@
-[package]
-name = "pintos"
-version = "0.1.0"
-edition = "2021"
-
-[build-dependencies]
-bootloader = "0.11.0"
-kernel = { path = "kernel", artifact = "bin", target = "x86_64-unknown-none" }
-
 [workspace]
 members = [
-    "kernel"
+    "common",
+    "kernel",
+    "loader",
+    "runner"
 ]

@@ -1,0 +1,29 @@
+{
+    "arch": "x86",
+    "cpu": "i386",
+    "code-model": "kernel",
+    "data-layout": "e-m:e-i32:32-f80:128-n8:16:32-S128-p:32:32",
+    "disable-redzone": true,
+    "features": "-mmx,-sse,-sse2,-sse3,-ssse3,-sse4.1,-sse4.2,-3dnow,-3dnowa,-avx,-avx2,+soft-float",
+    "linker": "rust-lld",
+    "linker-flavor": "ld.lld",
+    "llvm-target": "i686-unknown-none",
+    "max-atomic-width": 64,
+    "panic-strategy": "abort",
+    "position-independent-executables": false,
+    "relro-level": "full",
+    "stack-probes": {
+        "kind": "inline-or-call",
+        "min-llvm-version-for-inline": [
+            16,
+            0,
+            0
+        ]
+    },
+    "static-position-independent-executables": true,
+    "supported-sanitizers": [
+        "kcfi"
+    ],
+    "target-pointer-width": "32",
+    "target-c-int-width": "32"
+}

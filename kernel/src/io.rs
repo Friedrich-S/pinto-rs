@@ -1,3 +1,4 @@
+use common::SerialPort;
 use core::fmt::Write;
 
 /// An implementation of the standard `println` macro that works in the kernel.
@@ -28,8 +29,8 @@ pub fn _print(args: core::fmt::Arguments<'_>) {
 }
 
 /// Open a serial port for writing text to the output.
-fn serial() -> uart_16550::SerialPort {
-    let mut port = unsafe { uart_16550::SerialPort::new(0x3F8) };
+fn serial() -> SerialPort {
+    let mut port = unsafe { SerialPort::new(0x3F8) };
     port.init();
     port
 }

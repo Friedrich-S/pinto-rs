@@ -1,8 +1,6 @@
 pub use self::alloc::*;
 pub use pages::*;
 
-use bootloader_api::info::MemoryRegionKind;
-use core::ops::Deref;
 use spinning_top::const_spinlock;
 use spinning_top::Spinlock;
 
@@ -116,10 +114,11 @@ pub struct MemoryInfo {
 
 impl MemoryInfo {
     /// Initializes the global memory info state.
-    pub fn init(boot_info: &'static mut bootloader_api::BootInfo) {
+    pub fn init() {
         let mut info = Self::get();
 
-        for region in boot_info.memory_regions.deref() {
+        // ToDo
+        /*for region in boot_info.memory_regions.deref() {
             if let MemoryRegionKind::Usable = region.kind {
                 info.base_address = region.start;
                 info.size = region.end - region.start;
@@ -127,7 +126,7 @@ impl MemoryInfo {
             }
         }
 
-        info.base_virtual_address = boot_info.physical_memory_offset.into_option().unwrap_or(0);
+        info.base_virtual_address = boot_info.physical_memory_offset.into_option().unwrap_or(0);*/
 
         *MEMORY_INFO.lock() = info;
     }

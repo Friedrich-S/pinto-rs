@@ -1,0 +1,15 @@
+[package]
+name = "loader"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+byteorder = { version = "1.4.3", default-features = false }
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+opt-level = "z"
+strip = "symbols"
+panic = "abort"

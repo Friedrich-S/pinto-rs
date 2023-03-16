@@ -1,7 +1,4 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
@@ -9,11 +6,14 @@
             "request": "custom",
             "name": "Remote debug 'pintos'",
             "targetCreateCommands": [
-                "target create ${workspaceFolder}/build/kernel"
+                "target create --arch x86_64 ${workspaceFolder}/build/kernel",
+                //"target modules add ${workspaceFolder}/build/bootloader-x86_64-bios-stage-2",
+                //"target modules add ${workspaceFolder}/build/bootloader-x86_64-bios-stage-3",
+                //"target modules add ${workspaceFolder}/build/bootloader-x86_64-bios-stage-4"
             ],
             "processCreateCommands": [
-                "gdb-remote localhost:1234",
-                "continue"
+                "gdb-remote 1234",
+                //"continue"
             ]
         }
     ]
