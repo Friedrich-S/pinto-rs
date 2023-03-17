@@ -1,3 +1,5 @@
+#![feature(int_roundings)]
+
 use crate::run::RunArgs;
 use clap::Parser;
 use clap::Subcommand;

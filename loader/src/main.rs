@@ -45,14 +45,19 @@ pub extern "C" fn main(disk_num: u16) -> ! {
     let partition_table_start = unsafe { partition_table_raw() as *const [u8; MBR_ENTRY_SIZE] };
 
     unsafe {
-        CONSOLE.print("PiLo\n");
+        CONSOLE.print(b"PiLo\n");
     }
 
     const MAX_PARTITIONS: usize = 4;
     let raw = unsafe { core::slice::from_raw_parts(partition_table_start, MAX_PARTITIONS) };
+    // Make loop unrolling impossible to save some space. It does not look like there is another way to do this.
+    let num_partitions = core::hint::black_box(MAX_PARTITIONS);
     // Loop over every partition and check whether we can book the kernel from it.
-    for i in 0..MAX_PARTITIONS {
-        check_entry(disk_num, &raw[i]);
+    for i in 0..num_partitions {
+        // Becaue of the loop unrolling prevention, this would do bounds checking. We know that
+        // the index will always be valid, so we suppress the bound checks here (for size!).
+        let entry = unsafe { raw.get_unchecked(i) };
+        check_entry(disk_num, entry);
     }
 
     fail(b'L');
@@ -123,49 +128,39 @@ impl Console {
         unsafe {
             // Select serial port 0 at 9600 bps
             asm!(
-                "sub %dx, %dx
-                mov $0xe3, %al
-                int $0x14
-            ",
+                "sub %dx, %dx",
+                "mov $0xe3, %al",
+                "int $0x14",
                 out("dx") _, out("al") _,
                 options(att_syntax, nomem, nostack)
             );
         }
     }
 
-    /// Prints the given string to the BIOS serial port.
-    pub unsafe fn print(&mut self, msg: &str) {
-        if !self.can_write {
-            return;
-        }
+    /// Prints the given ASCII string to the BIOS serial port.
+    #[inline(never)]
+    pub unsafe fn print(&mut self, chars: &[u8]) {
+        for &c in chars {
+            let ax = (c as u16) | 0x0100;
+            //let res: u8;
 
-        for &c in msg.as_bytes() {
-            self.print_char(c);
-        }
-    }
+            unsafe {
+                // Select AH=1 serial output mode, select serial port 0
+                // Load character into "al" register and send it using the interrupt.
+                asm!(
+                    "sub %dx, %dx",
+                    "int $0x14",
+                    out("dx") _, in("ax") ax,
+                    options(att_syntax)
+                );
+            }
 
-    /// Prints the given ASCII character to the BIOS serial port.
-    pub unsafe fn print_char(&mut self, c: u8) {
-        let res: u8;
-
-        unsafe {
-            // Select AH=1 serial output mode, select serial port 0
-            // Load character into "al" register and send it using the interrupt.
-            asm!(
-                "mov $0x01, %ah
-                sub %dx, %dx
-                int $0x14
-            ", 
-                out("ah") res, out("dx") _, in("al") c,
-                options(att_syntax, nomem)
-            );
-        }
-
-        // res now contains the result of the write operation (value in %ah).
-        if res == 0x80 {
-            // Serial error occured
-            self.can_write = false;
-            return;
+            // res now contains the result of the write operation (value in %ah).
+            //if res == 0x80 {
+            //    // Serial error occured
+            //    self.can_write = false;
+            //    return;
+            //}
         }
     }
 }
@@ -180,8 +175,7 @@ fn panic(_info: &PanicInfo) -> ! {
 #[no_mangle]
 pub extern "C" fn fail(code: u8) -> ! {
     unsafe {
-        CONSOLE.print_char(b'!');
-        CONSOLE.print_char(code);
+        CONSOLE.print(&[b'!', code]);
     }
 
     unsafe {
@@ -189,24 +183,12 @@ pub extern "C" fn fail(code: u8) -> ! {
         asm!("int $0x18", options(att_syntax, nomem, nostack));
     }
 
-    loop {
-        hlt()
-    }
+    loop {}
 }
 
 #[cold]
 #[inline(never)]
 #[no_mangle]
 pub extern "C" fn read_failed() -> ! {
-    //unsafe {
-    //    CONSOLE.print("Bad read\n");
-    //}
-
     fail(b'z');
-}
-
-fn hlt() {
-    unsafe {
-        asm!("hlt");
-    }
 }

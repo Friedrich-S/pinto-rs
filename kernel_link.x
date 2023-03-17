@@ -1,6 +1,6 @@
 OUTPUT_FORMAT("elf32-i386")
 OUTPUT_ARCH("i386")
-ENTRY(start)			/* Kernel starts at "start" symbol. */
+ENTRY(_start)			/* Kernel starts at "start" symbol. */
 SECTIONS
 {
   /* Specify the kernel base address. */
